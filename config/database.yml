@@ -1,0 +1,15 @@
+default: &default
+  adapter: postgresql
+  username: theminijohn 
+  password: whatsup 
+  host: localhost
+  pool: 10
+
+development:
+  <<: *default
+  database: prometheus_api_development
+
+test: &test
+  <<: *default
+  encoding: utf8
+  database: prometheus_api_testing
