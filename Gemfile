@@ -5,7 +5,7 @@ ruby '2.2.2'
 gem 'rails', '4.2.1'
 
 gem 'pg', '~> 0.18.2'
-gem 'jbuilder', '~> 2.0'
+gem 'puma', '~> 2.12.2'
 
 group :development, :test do
   gem 'factory_girl', '~> 4.5.0'
