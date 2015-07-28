@@ -1,4 +1,7 @@
 class Review < ActiveRecord::Base
   belongs_to :guide
-  validates_presence_of :score, :image_url
+
+  validates :score, presence: true
+  validates :body, presence: true
+  # validates :image_url, uniqueness: true
 end

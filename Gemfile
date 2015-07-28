@@ -8,6 +8,7 @@ gem 'pg', '~> 0.18.2'
 gem 'puma', '~> 2.12.2'
 gem 'nokogiri', '~> 1.6.6.2'
 gem 'engtagger', '~> 0.2.0'
+gem 'mechanize', '~> 2.7.3'
 gem 'delayed_job_active_record'
 
 group :development, :test do

@@ -5,7 +5,7 @@ module Parser
   class AllReviews < Base
 
     attr_reader :score, :body, :image_url
-    Review = Struct.new(:score, :body, :image_url)
+    Review = Struct.new(:score, :body, :review_date, :image_url)
 
     # def post_initialize
       # Pass other params if needed
@@ -34,9 +34,13 @@ module Parser
             # Calculate Score
             atlas_score = (adj.count + score)
 
+            # Get Date
+            review_date = review.css('span.ratingDate').first.children.first.text.gsub!('Reviewed ', '')
+
             r = Review.new(
               atlas_score,
-              review_body
+              review_body,
+              review_date
             )
 
             # Add to Array
