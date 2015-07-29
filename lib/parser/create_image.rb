@@ -5,8 +5,8 @@ module Parser
 
     attr_reader :review
 
-    def post_initialize(args)
-      @review = args[:review]
+    def post_initialize(review)
+      @review = review
     end
 
     def parse
@@ -22,17 +22,32 @@ module Parser
         draw.annotate(mark, 0, 0, 0, 0, fit_text(review_body, 500)) do
           draw.gravity = Magick::CenterGravity
           draw.pointsize = 50
-          # draw.font_family = AnyAdvisor.configuration.font_family # set font
           draw.fill = "#fff"
-          draw.stroke = "none" # remove stroke
+          draw.stroke = "none"
         end
 
         img = img.dissolve(mark, 0.9, 0.9, Magick::CenterGravity)
-        img.write('/tmp/any_image.jpg')
 
-        # send_to_aws
+        file_name = "review_image_id#{@review.id}_#{Date.today.strftime('%Y_%m_%d')}"
+        img.write("/tmp/#{file_name}.jpg")
+
+        send_to_aws(@review, file_name)
 
       rescue StandardError => e
+        raise ParseError, e.message
+      end
+    end
+
+    def send_to_aws(review, file_name)
+      begin
+        Aws.config.update({ region: 'us-east-1', credentials: Aws::Credentials.new(ENV["PROMETHEUS_AKID"], ENV["PROMETHEUS_SECRET"]) })
+
+        s3 = Aws::S3::Resource.new(region: 'us-east-1')
+        obj = s3.bucket('prometheus-pics').object(file_name + '.jpg')
+        obj.upload_file("/tmp/#{file_name}.jpg", acl: 'public-read')
+
+        obj.public_url
+      rescue Aws::S3::Errors::ServiceError => e
         raise ParseError, e.message
       end
     end
