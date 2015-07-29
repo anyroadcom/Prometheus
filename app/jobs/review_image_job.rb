@@ -1,7 +1,9 @@
 class ReviewImageJob < ActiveJob::Base
   queue_as :default
 
-  def perform(*args)
-    # Do something later
+  def perform(review)
+    image_url = Parser::CreateImage.new(review).parse
+
+    # Update Review
   end
 end

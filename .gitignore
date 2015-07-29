@@ -7,3 +7,5 @@
 !/log/.keep
 /tmp
 .rspec
+
+.DS_Store

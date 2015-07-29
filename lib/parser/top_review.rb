@@ -9,7 +9,10 @@ module Parser
         top_review = reviews.sort! { |x, y| x['score'] <=> y['score'] }.last
 
         # XXX Check if reviews exists already
-        @guide.reviews.create!(top_review.to_h)
+        review = @guide.reviews.create!(top_review.to_h)
+
+        # Draw Image
+        ReviewImageJob.perform_later(review)
 
       rescue StandardError => e
         raise ParseError, e.message
